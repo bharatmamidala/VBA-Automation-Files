@@ -1,0 +1,191 @@
+Sub Retailer_Inventory_Separate()
+Dim lrow, lcol, i As Long
+Dim path, filename As String
+
+path = InputBox("Please enter folder path where you want to save all the extracted files.") & "\"
+    If path = "\" Then
+        path = "C:\Users\taglr\Desktop\"
+    End If
+
+i = 1
+lrow = Range("A" & Rows.count).End(xlUp).Row
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+
+Range("A1").Activate
+
+    Cells.Replace What:="-", Replacement:="", LookAt:=xlWhole, SearchOrder _
+    :=xlByRows, MatchCase:=True, SearchFormat:=False, ReplaceFormat:=False
+
+
+For i = 1 To lcol
+    If UCase(Cells(1, i).Value) Like "PRICE" Then
+        Range(Cells(1, i), Cells(lrow, i)).Select
+        Selection.NumberFormat = "0"
+        Selection.Replace What:="Rs. ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+        SearchFormat:=False, ReplaceFormat:=False
+        Selection.Replace What:="Rs ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+        SearchFormat:=False, ReplaceFormat:=False
+        Selection.Replace What:="INR ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+        SearchFormat:=False, ReplaceFormat:=False
+        Selection.Replace What:="INR", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+        SearchFormat:=False, ReplaceFormat:=False
+        Range("A1").Activate
+        
+    ElseIf UCase(Cells(1, i).Value) Like "RETAILER*NAME" Then
+        If i <> 10 Then
+        Columns(i).Select
+        Selection.Cut
+        Columns("J:J").Select
+        Selection.Insert shift:=xlToRight
+        Range("A1").Activate
+        End If
+    End If
+
+Next i
+
+If Range("K1").Value = "" Then
+    Range("K1").Value = "Comments"
+End If
+
+i = 1
+
+Range("F2").Value = "ACTIVE"
+Range("F2:F" & lrow).Select
+Selection.FillDown
+Selection.End(xlUp).Select
+
+ActiveSheet.Range("A1:O" & lrow).AutoFilter Field:=11, Criteria1:="<>"
+    'Columns("F").Select
+    'Range(Selection, Selection.End(xlDown)).Select
+    On Error GoTo msg
+
+        'If Selection.Find(What:="ACTIVE", After:=ActiveCell, LookIn:=xlFormulas, LookAt _
+            :=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:= _
+            True, SearchFormat:=False).Activate = True Then
+        
+        Range("A1").Activate
+        'Selection.AutoFilter
+        'ActiveSheet.Range("A1:O" & lrow).AutoFilter Field:=6, Criteria1:="ACTIVE"
+        Range("F1").Select
+    
+        i = Range("A1:J" & lrow).SpecialCells(xlCellTypeVisible).Find _
+        (What:="ACTIVE", After:=Sheets(1).Range("F1"), _
+        LookIn:=xlFormulas, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, _
+        MatchCase:=False, SearchFormat:=False).Row
+    
+        Range("F" & i).Select
+        ActiveCell.FormulaR1C1 = "DEACTIVE"
+        Range("F" & i).Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Selection.FillDown
+        Selection.End(xlUp).Select
+        
+        Range("I" & i).Select
+        Range("I" & i).Value = "0"
+        Range(Selection, Cells(lrow, "I")).Select
+        Selection.FillDown
+        Selection.End(xlUp).Select
+        Range("A1").Activate
+    'Else
+msg:
+    'End If
+ActiveSheet.ShowAllData
+'Selection.AutoFilter
+ActiveSheet.Range("A1:O" & lrow).AutoFilter Field:=12, Criteria1:=Array("111", "112", "113", "114", "115"), Operator:=xlFilterValues
+ActiveSheet.Range("A1:O" & lrow).AutoFilter Field:=9, Criteria1:="0"
+    
+    i = Range("A1:J" & lrow).SpecialCells(xlCellTypeVisible).Find _
+        (What:="ACTIVE", After:=Sheets(1).Range("F1"), _
+        LookIn:=xlFormulas, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, _
+        MatchCase:=False, SearchFormat:=False).Row
+    
+        Range("F" & i).Select
+        ActiveCell.FormulaR1C1 = "DEACTIVE"
+        Range("F" & i).Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Selection.FillDown
+        Selection.End(xlUp).Select
+        
+        Range("H" & i).Select
+        ActiveCell.FormulaR1C1 = "0"
+        Range("H" & i).Select
+        Range(Selection, Cells(lrow, "H")).Select
+        Selection.FillDown
+        Selection.End(xlUp).Select
+        
+    ActiveSheet.ShowAllData
+    ActiveSheet.Range("A1:O" & lrow).AutoFilter Field:=8, Criteria1:=""
+    
+        i = Range("A1:J" & lrow).SpecialCells(xlCellTypeVisible).Find _
+        (What:="0", After:=Sheets(1).Range("F1"), _
+        LookIn:=xlFormulas, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, _
+        MatchCase:=False, SearchFormat:=False).Row
+        
+        Range("H" & i).Select
+        ActiveCell.FormulaR1C1 = "0"
+        Range("H" & i).Select
+        Range(Selection, Cells(lrow, "H")).Select
+        Selection.FillDown
+        Selection.End(xlUp).Select
+                
+        Selection.AutoFilter
+        Range("J2:J" & lrow).Select
+        Selection.Copy
+        Sheets.Add After:=ActiveSheet
+        ActiveSheet.Paste
+        Application.CutCopyMode = False
+    With Selection
+        .HorizontalAlignment = xlGeneral
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+
+ActiveSheet.Range("A1:A" & lrow).RemoveDuplicates Columns:=1, Header:=xlNo
+Range("A1").Select
+    
+lrow1 = Sheets(2).Range("A" & Rows.count).End(xlUp).Row
+
+i = 1
+
+For i = 1 To lrow1
+
+    Sheets(1).Select
+    Range("J1").Activate
+    ActiveSheet.Range("A1:J" & lrow).AutoFilter Field:=10, Criteria1:=Sheets(2).Range("A" & i).Value
+    
+    Range(Cells(lrow, "A"), Cells(1, lcol)).Select
+    Range("J1").Activate
+    Selection.Copy
+    Workbooks.Add
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    With Selection
+        .HorizontalAlignment = xlLeft
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+
+    'path = "C:\Users\taglr\Desktop\Seperated Inventory\"
+    filename = Range("J2")
+    'Columns("J").Delete
+    ActiveWorkbook.SaveAs filename:=path & filename, FileFormat:=51
+    ActiveWindow.Close
+Next i
+    
+    Sheets(2).Delete
+MsgBox ("Abe dek kya raha h hogaya files check karle ek baar")
+    
+End Sub
+
+

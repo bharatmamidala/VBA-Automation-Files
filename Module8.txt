@@ -1,0 +1,67 @@
+Sub Index_Match_For_Inventory()
+Dim i, lrow, lcol As Long
+Dim path As String
+Dim filename, filename1 As String
+Dim wkb, wkb1 As Excel.Workbook
+Dim wks, wks1 As Excel.Worksheet
+Dim ram As Long
+
+Dim irng As Range
+Dim mrng As Range
+Dim lmrng As Range
+
+i = 1
+lrow = Range("A" & Rows.count).End(xlUp).Row
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+filename = ActiveWorkbook.Name
+Set wkb = Workbooks(filename)
+Set wks = wkb.Worksheets(1)
+path = InputBox("Please enter file path for VLookup.") & "\"
+filename1 = path & "Inventory_Update_Detail_data.csv"
+Workbooks.Open filename:=filename1
+Set wkb1 = Workbooks("Inventory_Update_Detail_data.csv")
+Set wks1 = wkb1.Worksheets(1)
+lrow1 = Range("A" & Rows.count).End(xlUp).Row
+lcol1 = Cells(1, Columns.count).End(xlToLeft).Column
+a = ActiveWorkbook.Name
+Workbooks(filename).Activate
+
+Set irng = wks1.Range(wks1.Cells(1, lcol1), wks1.Cells(lrow1, 1))
+'Set lmrng = wks.Range("A2")
+Set mrng = wks1.Range("U1:U" & lrow1)
+'wks.Range("H1").Copy
+'wks1.Range(wks1.Cells(1, lcol1), wks1.Cells(1, 1)).Copy
+
+Range("L1").Value = "TaxonomyId"
+Range("L2").Formula = "=INDEX(" & irng.Address(External:=True) & ",MATCH(A2," & mrng.Address(External:=True) & ",0),27)"
+
+Range("M1").Value = "Last Price"
+Range("M2").Formula = "=INDEX(" & irng.Address(External:=True) & ",MATCH(A2," & mrng.Address(External:=True) & ",0),15)"
+
+Range("N1").Value = "Price Difference"
+Range("N2").Formula = "=M2-H2"
+
+Range("O1").Value = "Percentage Difference"
+Range("O2").Formula = "=N2/M2"
+Range("O2").NumberFormat = "0%"
+
+Range("L2:O" & lrow).Select
+Selection.FillDown
+Selection.Copy
+ActiveSheet.Range("L2").PasteSpecial Paste:=xlPasteValues
+Application.CutCopyMode = False
+
+MsgBox ("File hogaya, Excel hang nahi hua.")
+
+Workbooks(a).Activate
+ActiveWorkbook.Close False
+
+Call Retailer_Inventory_Separate
+'On Error Resume Next
+
+'For i = 2 To UBound(varray, 1)
+'For i = 2 To lrow
+    'Cells(i, "L") = Application.WorksheetFunction.Index(wks1.Range(wks1.Cells(1, lcol1), wks1.Cells(lrow1, 1)), Application.WorksheetFunction.Match(wks.Range("A" & i), wks1.Range("U1:U" & lrow1), 0), 15)
+'Next
+
+End Sub

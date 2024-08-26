@@ -1,0 +1,53 @@
+Sub Consolidate_Electronics()
+Dim FolderPath As String, path As String, count As Integer
+    FolderPath = "C:\Users\taglr\Downloads\Online Retailers - Electronics File"
+
+    path = FolderPath & "\*.csv"
+
+    filename = Dir(path)
+
+    Do Until filename = ""
+       count = count + 1
+       filename = Dir()
+        Workbooks.Open ("C:\Users\taglr\Downloads\Online Retailers - Electronics File\" & filename)
+        lcol = Cells(1, Columns.count).End(xlToLeft).Column
+        lrow = Cells(Rows.count, "A").End(xlUp).Row
+        Range(Cells(lrow, "A"), Cells(1, lcol)).Select
+        Selection.Copy
+        Workbooks("Book1").Activate
+        lrow = Range("A" & Rows.count).End(xlUp).Row + 2
+        Range("A" & lrow).PasteSpecial Paste:=xlPasteValues
+        Workbooks.Open ("C:\Users\taglr\Downloads\Online Retailers - Electronics File\" & filename)
+        ActiveWorkbook.Save
+        ActiveWindow.Close
+    Loop
+
+End Sub
+
+Sub Hyperlink()
+Dim i, a, lrow, lrow1 As Integer
+Dim str As String
+
+i = 1
+lrow = Range("A" & Rows.count).End(xlUp).Row
+lrow1 = Range("B" & Rows.count).End(xlUp).Row
+Columns("A").Select
+a = InputBox("Count")
+'Selection.Cells.Replace What:=" ", Replacement:="%20", LookAt:=xlPart, SearchOrder _
+:=xlByRows, MatchCase:=True, SearchFormat:=False, ReplaceFormat:=False
+For i = 1 To a
+    str = Cells(i, 1).Value
+On Error GoTo myerrorhandling
+   ActiveWorkbook.FollowHyperlink Address:=str
+rror:
+Next i
+
+    
+Range("A1:A" & a).Select
+Selection.Delete
+Exit Sub
+myerrorhandling:
+Cells(lrow1, 2).Value = str
+lrow1 = Range("B" & Rows.count).End(xlUp).Row + 1
+Resume rror
+End Sub

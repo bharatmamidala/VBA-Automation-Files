@@ -1,0 +1,98 @@
+Sub data_cleaning()
+Dim i, lcol, lrw As Long
+Dim a, paths As String
+
+Dim FolderPath As String, path As String, count As Integer
+    FolderPath = "C:\Users\taglr\Downloads\Downloads\Data Cleaning"
+
+    path = FolderPath & "\*.csv"
+
+    filename = Dir(path)
+    
+Do Until filename = ""
+        
+        Workbooks.Open ("C:\Users\taglr\Downloads\Downloads\Data Cleaning\" & filename)
+        count = count + 1
+        filename = Dir()
+
+paths = "C:\Users\taglr\Desktop\Seperated Inventory\"
+    
+a = ActiveWorkbook.Name
+
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+lrw = Cells(Rows.count, i).End(xlUp).Row
+
+For i = 1 To lcol
+    If Cells(1, i).Value = "Product Id" Then
+    Cells(1, i).Value = "productId"
+        If i <> 1 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("A:A").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 2 To lcol
+    If Cells(1, i).Value = "taxonomy_id (custom_sql_query)" Then
+    Cells(1, i).Value = "taxonomyId"
+        If i <> 2 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("B:B").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 3 To lcol
+    If UCase(Cells(1, i).Value) Like "PROPOSED*PRODUCT*TYPE" Then
+    Cells(1, i).Value = "productType"
+        If i <> 3 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("C:C").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 4 To lcol
+    If UCase(Cells(1, i).Value) Like "PROPOSED*TAXONOMY*ID" Then
+        If i <> 4 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("D:D").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+    Range("C1").Select
+    lrw = Cells(Rows.count, i).End(xlUp).Row
+    Selection.AutoFilter
+    ActiveSheet.Range("A1:D" & lrw).AutoFilter Field:=4, Criteria1:="="
+    Range("C1").Select
+    ActiveSheet.Range("A1:C" & lrw).AutoFilter Field:=3, Criteria1:="<>"
+    lrw = Cells(Rows.count, i).End(xlUp).Row
+    Range("A1:C" & lrw).Select
+    Selection.Copy
+    Workbooks.Add
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    ChDir "C:\Users\taglr\Desktop\Seperated Inventory"
+    ActiveWorkbook.SaveAs filename:=paths & a & ".csv", FileFormat:=xlCSV
+    ActiveWindow.Close
+    
+    ActiveWindow.Close False
+Loop
+
+MsgBox "Alert Dekh K Darna Nai, Kaam Hogaya Bantai.", vbCritical
+
+End Sub

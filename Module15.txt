@@ -1,0 +1,190 @@
+Sub regex_work()
+Dim stringOne As String
+Dim regexOne As Object
+Set regexOne = New RegExp
+ 
+regexOne.Pattern = "[A]\,\s"
+regexOne.Global = True
+stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "A")
+Debug.Print stringOne
+
+
+
+
+regexOne.Pattern = "[B]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "B")
+
+regexOne.Pattern = "[C]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "C")
+
+regexOne.Pattern = "[D]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "D")
+
+regexOne.Pattern = "[E]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "E")
+
+regexOne.Pattern = "[F]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "F")
+
+regexOne.Pattern = "[G]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "G")
+
+regexOne.Pattern = "[H]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "H")
+
+regexOne.Pattern = "[I]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "I")
+
+regexOne.Pattern = "[J]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "J")
+
+regexOne.Pattern = "[K]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "K")
+
+regexOne.Pattern = "[L]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "L")
+
+regexOne.Pattern = "[M]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "M")
+
+regexOne.Pattern = "[N]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "N")
+
+regexOne.Pattern = "[O]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "O")
+
+regexOne.Pattern = "[P]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "P")
+
+regexOne.Pattern = "[Q]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "Q")
+regexOne.Pattern = "[R]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "R")
+regexOne.Pattern = "[S]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "S")
+
+regexOne.Pattern = "[T]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "T")
+
+regexOne.Pattern = "[U]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "U")
+regexOne.Pattern = "[V]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "V")
+
+regexOne.Pattern = "[W]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "W")
+
+regexOne.Pattern = "[X]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "X")
+
+regexOne.Pattern = "[Y]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+ 
+stringOne = regexOne.Replace(stringOne, "Y")
+
+regexOne.Pattern = "[Z]\,\s"
+regexOne.Global = True
+'stringOne = "P, R, O, D, U, C, T D, E, S, I, G, N D, E, T, A, I, L, S, Yellow printed yoga tank topround necksleeveless, A, B, O, U, T"
+'Range("J799").Value
+
+stringOne = regexOne.Replace(stringOne, "Z")
+
+Debug.Print stringOne
+End Sub

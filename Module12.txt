@@ -1,0 +1,67 @@
+Sub Tik_Tok()
+Dim i, lcol, lrow As Long
+Dim a, paths As String
+
+a = InputBox("Please enter file date.")
+a = "TikTok" & a
+paths = InputBox("Please enter folder to save file.") & "\"
+    If paths = "\" Then
+    MsgBox ("Hey, You didn't entered folder path. Please re-run the code and enter folder path."), vbCritical
+    Exit Sub
+    Else
+End If
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+lrow = Cells(Rows.count, i).End(xlUp).Row
+
+For i = 1 To lcol
+    If Cells(1, i).Value Like "Campaign Name" Then
+    Columns(i).Delete
+    i = i - 1
+
+    ElseIf Cells(1, i).Value Like "Placements Types" Then
+    Cells(1, i).Value = "Campaign type"
+    
+    ElseIf Cells(1, i).Value Like "Ad Name" Then
+    Cells(1, i).Value = "Campaign"
+    
+    ElseIf Cells(1, i).Value Like "Click" Then
+    Cells(1, i).Value = "Clicks"
+    
+    ElseIf Cells(1, i).Value Like "Impression" Then
+    Cells(1, i).Value = "Impressions"
+    
+    ElseIf Cells(1, i).Value Like "Date" Then
+    Cells(1, i).Value = "Day"
+    
+    End If
+
+Next i
+
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+
+Cells(1, lcol + 1).Value = "Conversions"
+Cells(2, lcol + 1).Value = "0"
+Cells(1, lcol + 2).Value = "View-through conv."
+Cells(2, lcol + 2).Value = "0"
+Cells(1, lcol + 3).Value = "status"
+Cells(2, lcol + 3).Value = "ACTIVE"
+Cells(1, lcol + 4).Value = "Currency"
+Cells(2, lcol + 4).Value = "INR"
+Cells(1, lcol + 5).Value = "Hour of day"
+Cells(2, lcol + 5).Value = "0"
+
+Range(Cells(2, lcol + 1), Cells(lrow, lcol + 5)).Select
+Selection.FillDown
+
+Range("A1").Activate
+
+Rows("1:2").Select
+Selection.Insert shift:=xlUp
+Range("A1").Value = "DailyTableauexport"
+Range("A2").Value = "December 22, 2019 - Jan01 , 2019"
+
+ActiveWorkbook.SaveAs filename:=paths & a & ".tsv", FileFormat:=xlText
+
+MsgBox ("Tabbu tera kaam kardiya, Message dek k darna nahi.")
+End Sub

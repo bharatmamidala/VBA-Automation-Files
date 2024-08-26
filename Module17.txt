@@ -1,0 +1,84 @@
+Sub Size_Merge()
+Dim i, a, b, c, lcol, lrow, lrow1, lrow2 As Long
+Dim str As String
+Dim rng As Range
+
+a = 1
+b = 1
+c = 1
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+lrow = Cells(Rows.count, 1).End(xlUp).Row
+
+For i = 1 To lcol
+    
+    If Cells(1, i).Value = "product_url" Then
+    c = i
+    End If
+    
+    If UCase(Cells(1, i).Value) = "SIZE" Then
+    b = i
+    End If
+    
+Next i
+
+    Range(Cells(2, c), Cells(lrow, c)).Select
+    Selection.Copy
+    Sheets.Add
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Selection.Range(Selection, Selection.End(xlDown)).RemoveDuplicates Columns:=1, Header:=xlNo
+    Selection.End(xlUp).Select
+    
+    Sheets(2).Select
+    Selection.End(xlUp).Select
+    Selection.AutoFilter
+    Sheets(1).Select
+
+lrow1 = Cells(Rows.count, 1).End(xlUp).Row
+Sheets.Add
+Sheets(2).Select
+
+For a = 1 To lrow1
+
+    str = Range("A" & a).Value
+    Sheets(3).Select
+    ActiveSheet.Range(Cells(1, 1), Cells(lrow, lcol)).AutoFilter Field:=c, Criteria1:=str
+    Range(Cells(1, b), Cells(1, b).End(xlDown)).Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets(1).Select
+    Selection.PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+    Range("B1").Value = ","
+    Range("B2").Value = "=CONCAT(A2,$B$1)"
+    lrow2 = Cells(Rows.count, 1).End(xlUp).Row
+        
+        If lrow2 = 2 Then
+            Range("B2").Select
+            Selection.Copy
+            Range("C2").PasteSpecial Paste:=xlPasteValues
+        Else
+            Range("B" & lrow2).Select
+            Range(Selection, Selection.End(xlUp)).Select
+            Selection.FillDown
+            Set rng = ActiveSheet.Range(ActiveSheet.Cells(2, 2), ActiveSheet.Cells(lrow2, 2))
+            Range("C2").Formula = "=CONCAT(" & rng.Address(External:=False) & ")"
+            Range("C2").Copy
+            Range("C2").PasteSpecial Paste:=xlPasteValues
+            Application.CutCopyMode = False
+        End If
+        
+    Range("C2").Copy
+    Sheets(2).Select
+    ActiveSheet.Range("B" & a).Select
+    Selection.PasteSpecial Paste:=xlPasteValues
+    Sheets(1).Select
+    Columns("A:C").Select
+    Selection.Delete
+    Range("A1").Select
+    Sheets(2).Select
+    
+Next a
+MsgBox "Har insaan ka size alag hota h.", vbExclamation
+End Sub

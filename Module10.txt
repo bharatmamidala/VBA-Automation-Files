@@ -1,0 +1,111 @@
+Sub Index_Match_For_Image_cleaning()
+Dim i, lrow, lcol, a, c As Long
+Dim path1, path2 As String
+Dim filename4, filename1, filename2, filename3 As String
+Dim wkb, wkb1 As Excel.Workbook
+Dim wks, wks1 As Excel.Worksheet
+Dim ram As Long
+
+Dim irng As Range
+Dim mrng As Range
+Dim lmrng As Range
+path1 = InputBox("Please enter folder path for Data.") & "\"
+path2 = InputBox("Please enter folder path for VLookup.") & "\"
+
+filename3 = Dir(path1)
+Do Until filename3 = ""
+    count = count + 1
+    filename4 = path1 & filename3
+    Workbooks.Open filename:=filename4
+    ActiveWorkbook.SaveAs filename:=path1 & filename3 & "1", FileFormat:=xlCSV
+    lrow = Range("A" & Rows.count).End(xlUp).Row
+    lcol = Cells(1, Columns.count).End(xlToLeft).Column
+    'filename = ActiveWorkbook.Name
+    Set wkb = Workbooks(filename3 & "1")
+    Set wks = wkb.Worksheets(1)
+    Set irng = wks.Range(wks.Cells(1, lcol), wks.Cells(lrow, 1))
+    
+    For a = 1 To lcol
+        If UCase(Cells(1, a).Value) Like "*SKU*CODE*" Then
+            If a <> 4 Then
+                Columns(a).Select
+                Selection.Cut
+                Columns("D:D").Select
+                Selection.Insert shift:=xlToRight
+                Range("D1").Select
+                Exit For
+            End If
+        End If
+    Next a
+    Set mrng = wks.Range("D1:D" & lrow)
+
+    For a = 1 To lcol1
+        If UCase(Cells(1, a).Value) Like "*TERMINATE*" Then
+            If a <> 5 Then
+                Columns(a).Select
+                Selection.Cut
+                Columns("E:E").Select
+                Selection.Insert shift:=xlToRight
+                Range("E1").Select
+                Exit For
+            End If
+        End If
+    Next a
+    
+'filename2 = Dir(path2)
+'Do Until filename2 = ""
+        'count = count + 1
+        filename3 = Left(filename3, Len(filename3) - 4)
+        filename3 = filename3 & "csv"
+        filename1 = path2 & filename3
+        On Error GoTo msg
+        Workbooks.Open filename:=filename1
+        Set wkb1 = Workbooks(filename3)
+        Set wks1 = wkb1.Worksheets(1)
+        lrow1 = Range("A" & Rows.count).End(xlUp).Row
+        lcol1 = Cells(1, Columns.count).End(xlToLeft).Column
+        
+        For a = 1 To lcol1
+            If UCase(Cells(1, a).Value) Like "*TERMINATE*" Then
+                If a <> 5 Then
+                    Columns(a).Select
+                    Selection.Cut
+                    Columns("E:E").Select
+                    Selection.Insert shift:=xlToRight
+                    Range("E1").Select
+                    Exit For
+                End If
+            End If
+        Next a
+        
+        'b = ActiveWorkbook.Name
+        'Workbooks(filename).Activate
+        'ActiveSheet.Range(Cells(1, lcol), Cells(lrow, 1)).AutoFilter Field:=11, Criteria1:=Left(filename3, Len(filename3) - 4)
+        
+        'c = Range("K1:K" & lrow).SpecialCells(xlCellTypeVisible).Find _
+        (What:=Left(filename2, Len(filename2) - 4), After:=Sheets(1).Range("K1"), _
+        LookIn:=xlFormulas, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, _
+        MatchCase:=False, SearchFormat:=False).Row
+        
+        Range("E2").Select
+        ActiveCell.Formula = "=INDEX(" & irng.Address(External:=True) & ",MATCH(D2," & mrng.Address(External:=True) & ",0),5)"
+        Range("E2").Select
+        Range("E2:E" & lrow1).Select
+        Selection.FillDown
+        Selection.Copy
+        Range("E2").PasteSpecial xlPasteValues
+        
+        'Range("E2").Formula = "=INDEX(" & irng.Address(External:=True) & ",MATCH(A2," & mrng.Address(External:=True) & ",0),5)"
+        
+        ActiveWorkbook.Save
+        ActiveWindow.Close
+        ActiveWorkbook.Save
+        ActiveWindow.Close
+        
+        'filename2 = Dir()
+'Loop
+msg:
+    filename3 = Dir()
+Loop
+MsgBox ("Hogaya")
+End Sub

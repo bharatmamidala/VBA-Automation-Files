@@ -1,0 +1,21 @@
+Sub Price_Difference_Finder()
+Dim i, lrow As Integer
+
+i = 1
+lrow = Range("A" & Rows.count).End(xlUp).Row
+
+Range("N1").Value = "Price Difference"
+Range("O1").Value = "Percentage Difference"
+
+On Error Resume Next
+
+For i = 2 To lrow
+    Range("N" & i).Value = Range("M" & i).Value - Range("H" & i).Value
+    Range("O" & i).Value = Range("N" & i).Value / Range("M" & i).Value
+    Range("O" & i).NumberFormat = "0%"
+Next i
+
+ActiveWorkbook.Save
+MsgBox ("File save hogaya, Percentage Filter ache se match karle varna galiya sunega."), vbExclamation
+
+End Sub

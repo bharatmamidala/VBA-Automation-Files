@@ -1,0 +1,101 @@
+Sub FB_IG()
+Dim i, lcol, lrow As Long
+Dim a, paths As String
+
+a = InputBox("Please enter file date.")
+a = "FB_IG_" & a
+paths = InputBox("Please enter folder to save file.") & "\"
+    If paths = "\" Then
+    MsgBox ("Hey, You didn't entered folder path. Please re-run the code and enter folder path."), vbCritical
+    Exit Sub
+    Else
+End If
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+lrow = Cells(Rows.count, i).End(xlUp).Row
+
+For i = 1 To lcol
+    If Cells(1, i).Value Like "Reporting starts" Then
+    Columns(i).Delete
+    i = i - 1
+    
+    ElseIf Cells(1, i).Value Like "Reporting ends" Then
+    Columns(i).Delete
+    i = i - 1
+    
+    ElseIf Cells(1, i).Value Like "Campaign name" Then
+    Cells(1, i).Value = "Campaign"
+        If i <> 2 Then
+        Columns(i).Select
+        Selection.Cut
+        Columns("B:B").Select
+        Selection.Insert shift:=xlToRight
+        End If
+        Columns(i + 1).Select
+        Selection.Insert shift:=xlToRight
+        Cells(1, i + 1).Value = "Campaign type"
+        Cells(2, i + 1).Select
+        ActiveCell.Formula = "=IF(OR(NOT(ISERR(SEARCH(""instagram"",B2))),NOT(ISERR(SEARCH(""IG_"",B2))),NOT(ISERR(SEARCH(""IG "",B2)))),""Instagram"",""FB"")"
+        Range(Cells(2, i + 1), Cells(lrow, i + 1)).Select
+        Selection.FillDown
+        Selection.Copy
+        Cells(2, i + 1).PasteSpecial xlPasteValues
+        Application.CutCopyMode = False
+        Range("A1").Activate
+    
+    ElseIf Cells(1, i).Value Like "Clicks (all)" Then
+    Cells(1, i).Value = "Clicks"
+    
+    ElseIf Cells(1, i).Value Like "Amount spent (INR)" Then
+    Cells(1, i).Value = "Cost"
+    
+    ElseIf Cells(1, i).Value Like "Time of day (viewer's time zone)" Then
+        If i <> 4 Then
+        Columns(i).Select
+        Selection.Cut
+        Columns("D:D").Select
+        Selection.Insert shift:=xlToRight
+        End If
+        Columns(i + 1).Select
+        Selection.Insert shift:=xlToRight
+        Cells(1, i + 1).Value = "Hour of day"
+        Cells(2, i + 1).Select
+        ActiveCell.Formula = "=LEFT(D2,2)"
+        Range(Cells(2, i + 1), Cells(lrow, i + 1)).Select
+        Selection.FillDown
+        Selection.Copy
+        Cells(2, i + 1).PasteSpecial xlPasteValues
+        Application.CutCopyMode = False
+        Columns("D:D").Delete
+        i = i - 1
+        Range("A1").Activate
+    End If
+    
+Next i
+
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+
+Cells(1, lcol + 1).Value = "Conversions"
+Cells(2, lcol + 1).Value = "0"
+Cells(1, lcol + 2).Value = "View-through conv."
+Cells(2, lcol + 2).Value = "0"
+Cells(1, lcol + 3).Value = "status"
+Cells(2, lcol + 3).Value = "ACTIVE"
+Cells(1, lcol + 4).Value = "Currency"
+Cells(2, lcol + 4).Value = "INR"
+
+Range(Cells(2, lcol + 1), Cells(lrow, lcol + 4)).Select
+Selection.FillDown
+
+Range("A1").Activate
+
+Rows("1:2").Select
+Selection.Insert shift:=xlUp
+Range("A1").Value = "DailyTableauexport"
+Range("A2").Value = "December 22, 2019 - Jan01 , 2019"
+
+ActiveWorkbook.SaveAs filename:=paths & a & ".tsv", FileFormat:=xlText
+
+MsgBox ("Tabbu tera kaam kardiya, Message dek k darna nahi.")
+
+End Sub

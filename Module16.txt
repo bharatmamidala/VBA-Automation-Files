@@ -1,0 +1,45 @@
+Sub Semicolon_Space_Between_Words_Numbers()
+Dim rng As Range
+Dim WorkRng As Range
+Dim a As String
+Dim b As String
+Dim c As String
+Dim d As String
+Dim e As String
+Dim f As String
+On Error Resume Next
+
+xTitleId = "B ToolsforExcel"
+Set WorkRng = Application.Selection
+Set WorkRng = Application.InputBox("Select Range for semicolon space between words and numbers.", xTitleId, WorkRng.Address, Type:=8)
+Application.ScreenUpdating = False
+f = InputBox("Please enter symbol only for semicolon space between words and numbers.")
+    
+For Each rng In WorkRng
+    a = rng.Value
+    For i = 1 To Len(a)
+    b = Mid(a, i, 1)
+    c = Mid(a, i + 1, 1)
+    bAsc = VBA.Asc(b)
+    xAsc = VBA.Asc(c)
+    If (i = 1) Then
+    d = b
+    End If
+    If bAsc >= 97 And bAsc <= 122 Then
+    If xAsc >= 48 And xAsc <= 57 Then
+    'd = d & f & Mid(a, i + 1, 1)
+    c = f & c
+    End If
+    End If
+    'If c = LCase(c) Or b = UCase(b) Or xAsc < 65 Or xAsc > 122 Then
+    d = d & c
+    'End If
+    
+    Next i
+rng.Value = d
+Next
+MsgBox ("Done Danadane....")
+End Sub
+
+
+

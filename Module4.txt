@@ -1,0 +1,149 @@
+Sub MIS()
+Dim lrow As Integer
+lrow = Range("D" & Rows.count).End(xlUp).Row
+
+    ' Columns Insert
+    
+    Columns("A:A").Select
+    Selection.Insert shift:=xlToRight
+    Selection.Insert shift:=xlToRight
+    Selection.Insert shift:=xlToRight
+    Selection.Insert shift:=xlToRight
+    ' Adding Header Name
+    
+    Range("A1").Select
+    ActiveCell.FormulaR1C1 = "Date of reciept from Contexio"
+    Range("B1").Select
+    ActiveCell.FormulaR1C1 = "Retailer Name"
+    Range("C1").Select
+    ActiveCell.FormulaR1C1 = "Category BY Contexio"
+    Range("D1").Select
+    ActiveCell.FormulaR1C1 = "Count"
+    ' Autofill Of Reatailer Name & Category By Contexio
+    
+    Range("A2").Select
+    Selection.NumberFormat = "[$-en-US]mmm-yy;@"
+    ActiveCell.FormulaR1C1 = InputBox("Date of reciept from Contexio")
+    Range("B2").Select
+    ActiveCell.FormulaR1C1 = InputBox("Retailer Name")
+    Range("C2").Select
+    ActiveCell.FormulaR1C1 = InputBox("Category By Contexio")
+    Range("D2").Select
+    ActiveCell.FormulaR1C1 = "1"
+    Range("E2").Select
+    Selection.End(xlDown).Select
+    Range("D" & lrow).Select
+    Range(Selection, Selection.End(xlToLeft)).Select
+    Range(Selection, Selection.End(xlUp)).Select
+    Selection.FillDown
+    Selection.End(xlUp).Select
+    Selection.End(xlToLeft).Select
+    Selection.End(xlToLeft).Select
+End Sub
+Sub Pivot()
+Dim Data_Sheet As Worksheet
+Dim Pivot_Sheet As Worksheet
+Dim StartPoint As Range
+Dim DataRange As Range
+Dim PivotName As String
+Dim NewRange As String
+Dim LastCol As Long
+Dim lastRow As Long
+
+'Set Pivot Table & Source Worksheet
+Set Data_Sheet = ThisWorkbook.ActiveSheet
+Sheets.Add
+ActiveSheet.Name = "Pivot"
+Set Pivot_Sheet = ActiveSheet
+ 
+ 
+Data_Sheet.Activate
+Set StartPoint = Data_Sheet.Range("A1")
+LastCol = StartPoint.End(xlToRight).Column
+DownCell = StartPoint.End(xlDown).Row
+Set DataRange = Data_Sheet.Range(StartPoint, Cells(DownCell, LastCol))
+NewRange = Data_Sheet.Name & "!" & DataRange.Address(ReferenceStyle:=xlR1C1)
+
+Pivot_Sheet.Select
+    
+    ActiveWorkbook.PivotCaches.Create(SourceType:=xlDatabase, SourceData:= _
+        NewRange).CreatePivotTable TableDestination _
+        :=Pivot_Sheet.Range("A4"), TableName:="PivotTable1"
+    
+    
+    Sheets("Pivot").Select
+    Cells(3, 1).Select
+    With ActiveSheet.PivotTables("PivotTable1")
+        .ColumnGrand = True
+        .HasAutoFormat = True
+        .DisplayErrorString = False
+        .DisplayNullString = True
+        .EnableDrilldown = True
+        .ErrorString = ""
+        .MergeLabels = False
+        .NullString = ""
+        .PageFieldOrder = 2
+        .PageFieldWrapCount = 0
+        .PreserveFormatting = True
+        .RowGrand = True
+        .SaveData = True
+        .PrintTitles = False
+        .RepeatItemsOnEachPrintedPage = True
+        .TotalsAnnotation = False
+        .CompactRowIndent = 1
+        .InGridDropZones = False
+        .DisplayFieldCaptions = True
+        .DisplayMemberPropertyTooltips = False
+        .DisplayContextTooltips = True
+        .ShowDrillIndicators = True
+        .PrintDrillIndicators = False
+        .AllowMultipleFilters = False
+        .SortUsingCustomLists = True
+        .FieldListSortAscending = False
+        .ShowValuesRow = False
+        .CalculatedMembersInFilters = False
+        .RowAxisLayout xlCompactRow
+    End With
+    With ActiveSheet.PivotTables("PivotTable1").PivotCache
+        .RefreshOnFileOpen = False
+        .MissingItemsLimit = xlMissingItemsDefault
+    End With
+    ActiveSheet.PivotTables("PivotTable1").RepeatAllLabels xlRepeatLabels
+    With ActiveSheet.PivotTables("PivotTable1").PivotFields("Retailer Name")
+        .Orientation = xlRowField
+        .Position = 1
+    End With
+    With ActiveSheet.PivotTables("PivotTable1").PivotFields("Category BY Contexio")
+        .Orientation = xlRowField
+        .Position = 2
+    End With
+    ActiveSheet.PivotTables("PivotTable1").AddDataField ActiveSheet.PivotTables( _
+        "PivotTable1").PivotFields("Count"), "Sum of Count", xlSum
+    With ActiveSheet.PivotTables("PivotTable1").PivotFields("categoryPath")
+        .Orientation = xlRowField
+        .Position = 3
+    End With
+    ActiveSheet.PivotTables("PivotTable1").RowAxisLayout xlTabularRow
+    ActiveSheet.PivotTables("PivotTable1").RepeatAllLabels xlRepeatLabels
+    ActiveSheet.PivotTables("PivotTable1").PivotFields("Retailer Name").Subtotals _
+        = Array(False, False, False, False, False, False, False, False, False, False, False, False _
+        )
+    ActiveSheet.PivotTables("PivotTable1").PivotFields("Category BY Contexio"). _
+        Subtotals = Array(False, False, False, False, False, False, False, False, False, False, _
+        False, False)
+    ActiveSheet.PivotTables("PivotTable1").PivotFields("Count").Subtotals = Array( _
+        False, False, False, False, False, False, False, False, False, False, False, False)
+    ActiveSheet.PivotTables("PivotTable1").PivotFields("categoryPath").Subtotals = _
+        Array(False, False, False, False, False, False, False, False, False, False, False, False)
+    End Sub
+
+Sub File_Picker()
+Dim strFilePath As String
+    With Application.FileDialog(msoFileDialogFilePicker)
+        
+        If .Show <> 0 Then
+            strFilePath = .SelectedItems(1)
+        End If
+   End With
+End Sub
+

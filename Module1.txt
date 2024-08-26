@@ -1,0 +1,333 @@
+Sub myfirstautomation()
+Dim i, lcol, lrw As Long
+
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+lrw = Cells(Rows.count, i).End(xlUp).Row
+
+    Cells.Replace What:="-", Replacement:="", LookAt:=xlWhole, SearchOrder _
+    :=xlByRows, MatchCase:=True, SearchFormat:=False, ReplaceFormat:=False
+
+For i = 1 To lcol
+    
+    If UCase(Cells(1, i).Value) Like "TITLE" Or UCase(Cells(1, i).Value) Like "PRODUCT TITLE" Or UCase(Cells(1, i).Value) Like "VARIANT NAME" Or UCase(Cells(1, i).Value) Like "PRODUCT_NAME" Then
+    Cells(1, i).Value = "product_name"
+    
+    ElseIf UCase(Cells(1, i).Value) Like "URL" Or UCase(Cells(1, i).Value) Like "PRODUCT URL" Or UCase(Cells(1, i).Value) Like "VARIANT*URL" Then
+    Cells(1, i).Value = "product_url"
+    
+    ElseIf UCase(Cells(1, i).Value) Like "BRAND" Or UCase(Cells(1, i).Value) Like "BRAND NAME" Or UCase(Cells(1, i).Value) Like "BRAND_NAME" Then
+    Cells(1, i).Value = "brand_name"
+    
+    ElseIf UCase(Cells(1, i).Value) Like "PRICE" Or UCase(Cells(1, i).Value) Like "MRP" Then
+    Cells(1, i).Value = "price"
+    
+    ElseIf UCase(Cells(1, i).Value) Like "IMAGE" Or UCase(Cells(1, i).Value) Like "IMAGE*" Then
+    Cells(1, i).Value = "image_link"
+        
+    ElseIf UCase(Cells(1, i).Value) Like "BREADCRUM" Then
+    Cells(1, i).Value = "breadcrumb"
+    
+    ElseIf UCase(Cells(1, i).Value) Like "*SKU*" Or UCase(Cells(1, i).Value) Like "ITEM_ID" Or UCase(Cells(1, i).Value) Like "PRODUCT*CODE*" Or UCase(Cells(1, i).Value) Like "PRODUCT*NUMBER" Or UCase(Cells(1, i).Value) Like "PRODUCT*ID" Then
+    Cells(1, i).Value = "retailer_sku"
+    
+    ElseIf UCase(Cells(1, i).Value) Like "COLOUR" Or UCase(Cells(1, i).Value) Like "COLOR" Then
+    Cells(1, i).Value = "color"
+    
+    End If
+    
+Next i
+    
+    Call blank_col_delete
+    Call delete_duplicate_col
+    Call find_replace
+    Call text_to_col
+    Call image_link_rename
+MsgBox ("Ek baar acchese dekhlena varna gaaliya sunna padega")
+End Sub
+
+Sub blank_col_delete()
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+
+i = 1
+
+    For i = 1 To lcol
+    lrw = Cells(Rows.count, i).End(xlUp).Row
+        If Cells(1, i).Value = "" Then
+        Exit For
+        End If
+        
+        If lrw = 1 Then
+        Columns(i).Delete
+        i = i - 1
+        End If
+        
+    Next i
+    
+End Sub
+
+Sub delete_duplicate_col()
+Dim i, lcol, chkcol As Long
+
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+i = 1
+    For i = 1 To lcol
+        If Cells(1, i).Value = "" Then
+        Exit For
+        End If
+        
+        For chkcol = i To lcol
+        If i = chkcol Then
+        chkcol = chkcol + 1
+        End If
+        
+        If Cells(1, i).Value = Cells(1, chkcol).Value Then
+        Columns(chkcol).Delete
+        chkcol = chkcol - 1
+        End If
+        
+        Next chkcol
+        
+    Next i
+
+End Sub
+
+Sub find_replace()
+Dim i, lcol As Long
+
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+
+    For i = 1 To lcol
+        If Cells(1, i).Value Like "product_url" Or Cells(1, i).Value Like "product_name" Or Cells(1, i).Value Like "image_link" Or Cells(1, i).Value Like "breadcrumb" Or LCase(Cells(1, i).Value) Like "size" Or Cells(1, i).Value Like "color" Then
+        Columns(i).Select
+            If Cells(1, i).Value Like "breadcrumb" Then
+                Columns(i).Select
+                Selection.Replace What:="|", Replacement:=" > ", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+                SearchFormat:=False, ReplaceFormat:=False
+            ElseIf Cells(1, i).Value Like "color" Then
+                Columns(i).Select
+                Selection.Replace What:="|", Replacement:=",", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+                SearchFormat:=False, ReplaceFormat:=False
+            ElseIf LCase(Cells(1, i).Value) Like "size" Then
+                Columns(i).Select
+                Selection.Replace What:="|", Replacement:=",", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+                SearchFormat:=False, ReplaceFormat:=False
+            End If
+        Else
+            Columns(i).Select
+            Selection.Replace What:="|", Replacement:="<br/>", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+            SearchFormat:=False, ReplaceFormat:=False
+    
+        End If
+        
+        If Cells(1, i).Value Like "price" Then
+            Range(Selection, Selection.End(xlUp)).Select
+            Selection.NumberFormat = "0"
+            Selection.Replace What:="Rs. ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+            SearchFormat:=False, ReplaceFormat:=False
+            Selection.Replace What:="Rs ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+            SearchFormat:=False, ReplaceFormat:=False
+            Selection.Replace What:="INR ", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+            SearchFormat:=False, ReplaceFormat:=False
+            Selection.Replace What:="INR", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
+            SearchFormat:=False, ReplaceFormat:=False
+        
+        End If
+        
+    
+    Next i
+    
+End Sub
+
+Sub text_to_col()
+Dim i, lcol As Long
+
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+
+    For i = 1 To lcol
+        If Cells(1, i).Value = "image_link" Then
+            If i <> 5 Then
+                Columns(i).Select
+                Selection.Cut
+                Columns("E:E").Select
+                Selection.Insert shift:=xlToRight
+            End If
+        Columns("F:BL").Select
+        Selection.Insert shift:=xlToRight
+        Columns("E").Select
+        Selection.TextToColumns Destination:=Range("E1"), DataType:=xlDelimited, _
+        TextQualifier:=xlNone, ConsecutiveDelimiter:=True, Other:=True, OtherChar:="|"
+        Cells(1, "F").FillRight
+        Cells(1, "F").FormulaR1C1 = "image_link_1"
+        Cells(1, "F").Select
+        Selection.AutoFill Destination:=Range("F1:BL1"), Type:=xlFillDefault
+        Call blank_col_delete
+        End If
+        
+    Next i
+
+End Sub
+
+Sub image_link_rename()
+Dim i, lcol, a As Long
+
+i = 1
+a = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+
+    For i = 1 To lcol
+        If Cells(1, i).Value Like "image_link_*" Then
+        Cells(1, i).Value = "image_link_" & a
+        a = a + 1
+        End If
+                
+        If a > 5 Then
+            If Cells(1, i).Value Like "image_link_*" Then
+            Columns(i).Select
+            Columns(i).Delete
+            i = i - 1
+            End If
+        End If
+        
+    Next i
+    
+End Sub
+
+Sub Column_sequence()
+Dim i, lcol, lrw As Long
+
+i = 1
+lcol = Cells(1, Columns.count).End(xlToLeft).Column
+lrw = Cells(Rows.count, i).End(xlUp).Row
+
+For i = 1 To lcol
+    If Cells(1, i).Value = "product_url" Then
+        If i <> 1 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("A:A").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 2 To lcol
+    If Cells(1, i).Value = "product_name" Then
+        If i <> 2 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("B:B").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 3 To lcol
+    If Cells(1, i).Value = "brand_name" Then
+        If i <> 3 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("C:C").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 4 To lcol
+    If LCase(Cells(1, i).Value) = "price" Then
+        If i <> 4 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("D:D").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 5 To lcol
+    If Cells(1, i).Value = "image_link" Then
+        If i <> 5 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("E:E").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 6 To lcol
+    If Cells(1, i).Value = "image_link_1" Then
+        If i <> 6 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("F:F").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 6 To lcol
+    If Cells(1, i).Value = "image_link_2" Then
+        If i <> 7 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("G:G").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 6 To lcol
+    If Cells(1, i).Value = "image_link_3" Then
+        If i <> 8 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("H:H").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 6 To lcol
+    If Cells(1, i).Value = "image_link_4" Then
+        If i <> 9 Then
+            Columns(i).Select
+            Selection.Cut
+            Columns("I:I").Select
+            Selection.Insert shift:=xlToRight
+        Exit For
+        End If
+    End If
+Next i
+
+For i = 6 To lcol
+    If Cells(1, i).Value = "breadcrumb" Then
+        Columns(i).Select
+        Selection.Cut
+        Columns(lcol + 1).Select
+        Selection.Insert shift:=xlToRight
+    Exit For
+    End If
+Next i
+
+For i = 6 To lcol
+    If Cells(1, i).Value = "taxonomyId" Then
+        Columns(i).Select
+        Selection.Cut
+        Columns(lcol + 1).Select
+        Selection.Insert shift:=xlToRight
+    Exit For
+    End If
+Next i
+
+End Sub

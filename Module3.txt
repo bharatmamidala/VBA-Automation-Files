@@ -1,0 +1,76 @@
+Sub Rows_Sep()
+Dim c, lrow, i As Long
+Dim path, filename As String
+Dim a As String
+
+path = "C:\Users\taglr\Desktop\Seperated Inventory\"
+    
+a = ActiveWorkbook.Name
+a = Left(a, Len(a) - 4)
+i = 0
+lrow = Range("A" & Rows.count).End(xlUp).Row
+
+Do Until lrow <= 5000
+    i = i + 1
+    c = i
+    If c = 1 Then
+    c = "One"
+    ElseIf c = 2 Then
+    c = "Two"
+    ElseIf c = 3 Then
+    c = "Three"
+    ElseIf c = 4 Then
+    c = "Four"
+    ElseIf c = 5 Then
+    c = "Five"
+    ElseIf c = 6 Then
+    c = "Six"
+    ElseIf c = 7 Then
+    c = "Seven"
+    ElseIf c = 8 Then
+    c = "Eight"
+    ElseIf c = 9 Then
+    c = "Nine"
+    ElseIf c = 10 Then
+    c = "Ten"
+    ElseIf c = 11 Then
+    c = "Eleven"
+    ElseIf c = 12 Then
+    c = "Twelve"
+    ElseIf c = 13 Then
+    c = "Thirteen"
+    ElseIf c = 14 Then
+    c = "Fourteen"
+    ElseIf c = 15 Then
+    c = "Fifteen"
+    End If
+    
+    filename = a & c
+    lrow = Range("A" & Rows.count).End(xlUp).Row
+    
+    Application.GoTo Reference:="R4999C1"
+    Range(Selection, Selection.End(xlUp)).Select
+    Rows("1:4999").Select
+    Range("A4999").Activate
+    Selection.Copy
+    
+    Workbooks.Add
+    ActiveSheet.Range("A1").PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+    Selection.End(xlUp).Select
+    Application.CutCopyMode = False
+    ChDir "C:\Users\taglr\Desktop\Seperated Inventory"
+    ActiveWorkbook.SaveAs filename:=path & filename & ".csv", FileFormat:=xlCSV
+    ActiveWindow.Close
+    Range("A4999").Select
+    Range(Selection, Selection.End(xlUp)).Select
+    Rows("2:4999").Select
+    Selection.Delete shift:=xlUp
+    Selection.End(xlUp).Select
+    
+Loop
+
+MsgBox ("Bas Kya Bhau Kardiya Tera Kaam")
+ActiveWindow.Close
+End Sub
+

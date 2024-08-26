@@ -1,0 +1,103 @@
+Sub Final_Upload_Inventory_Edit()
+Dim lrow As Long
+Dim path, filename, a, b As String
+Dim FolderPath As String, paths As String, count, d As Integer
+
+FolderPath = InputBox("Please enter folder path for files which you want to do final edit.")
+If FolderPath = "" Then
+    MsgBox ("Hey, You didn't entered folder path. Please re-run the code and enter folder path."), vbCritical
+    Exit Sub
+    Else
+End If
+
+path = FolderPath & "\*"
+filename = Dir(path)
+paths = InputBox("Please enter folder path where you want to save Final Upload File.") & "\"
+    If paths = "\" Then
+        paths = "C:\Users\taglr\Desktop\Seperated Inventory\"
+    End If
+    
+b = InputBox("Please enter a unique name as filename.")
+If b = "" Then
+    MsgBox ("Hey, You didn't entered unique name for filename. Please re-run the code and enter a unique name as filename."), vbCritical
+    Exit Sub
+    Else
+End If
+
+Do Until filename = ""
+        
+        Workbooks.Open (FolderPath & "\" & filename)
+        count = count + 1
+        filename = Dir()
+
+lrow = Range("A" & Rows.count).End(xlUp).Row
+a = Left(ActiveWorkbook.Name, Len(ActiveWorkbook.Name) - 5)
+
+If lrow > 5000 Then
+
+d = 0
+
+Do Until lrow <= 5000
+    lrow = Range("A" & Rows.count).End(xlUp).Row
+    d = d + 1
+    c = d
+    If c = 1 Then
+    c = "One"
+    ElseIf c = 2 Then
+    c = "Two"
+    ElseIf c = 3 Then
+    c = "Three"
+    ElseIf c = 4 Then
+    c = "Four"
+    ElseIf c = 5 Then
+    c = "Five"
+    ElseIf c = 6 Then
+    c = "Six"
+    ElseIf c = 7 Then
+    c = "Seven"
+    ElseIf c = 8 Then
+    c = "Eight"
+    ElseIf c = 9 Then
+    c = "Nine"
+    ElseIf c = 10 Then
+    c = "Ten"
+    ElseIf c = 11 Then
+    c = "Eleven"
+    ElseIf c = 12 Then
+    c = "Twelve"
+    ElseIf c = 13 Then
+    c = "Thirteen"
+    ElseIf c = 14 Then
+    c = "Fourteen"
+    ElseIf c = 15 Then
+    c = "Fifteen"
+    End If
+    Range("A1:I4999").Select
+    Range("A1").Activate
+    Selection.Copy
+    Workbooks.Add
+    ActiveSheet.Range("A1").PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+    
+    ActiveWorkbook.SaveAs filename:=paths & a & b & "Part" & c, FileFormat:=xlCSV
+    ActiveWindow.Close
+    Range("2:4999").Select
+    Selection.Delete
+Loop
+
+ElseIf lrow <= 5000 Then
+    Range(Cells(lrow, "A"), Cells(1, "I")).Select
+    Selection.Copy
+    Workbooks.Add
+    ActiveSheet.Range("A1").PasteSpecial Paste:=xlPasteValues
+    Application.CutCopyMode = False
+
+    ActiveWorkbook.SaveAs filename:=paths & a & b, FileFormat:=xlCSV
+    ActiveWindow.Close
+End If
+
+ActiveWindow.Close False
+
+Loop
+MsgBox ("Sab files process hogaye. Ek baar check karle varna galiya sunna padega.")
+End Sub
